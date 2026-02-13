@@ -1,28 +1,19 @@
 @import "tailwindcss";
 
-:root {
-  --background: #000000;
-  --foreground: #ffffff;
-}
-
 @theme {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Цвета */
+  --color-background: #000000;
+  --color-foreground: #ffffff;
+  --color-catalog: #3b3a3e;
+  --color-violet: #8776F9;
+
+  /* Типографика  */
   --text-ui-13: 13px;
   --leading-ui-13: 16px;
-  --color-catalog: #3b3a3e;
-
 }
 
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-}
-
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply bg-background text-foreground;
   }
-} */
+}

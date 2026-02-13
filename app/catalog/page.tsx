@@ -1,41 +1,33 @@
-'use client'
+import axios from "axios";
+import Link from "next/link";
+import Card from "../components/Card";
+import CatalogWrapper from "./components/CatalogWrapper";
+import { Catalog } from "../types/catalog";
 
-import { useState } from "react"
-import Card from "../components/Card"
-import Button from "./components/Button"
-import Link from "next/link"
-
-
-const films = [
-    { title: 'Фильмы', link: '/catalog/collection/movies', },
-    { title: 'Сериалы', link: '/catalog/collection/serials' },
-    { title: 'Мультфильмы', link: '/catalog/collection' },
-    { title: 'Фитнес', link: '/catalog/collection/fitnes' },
-    { title: 'Природа', link: '/catalog/collection' },
-    { title: 'Лекции', link: '/catalog/collection' },
-
-]
+const api = process.env.NEXT_PUBLIC_API_URL;
 
 
-const page = () => {
+const Page = async () => {
+    let catalog: Catalog[] = [];
 
-    const [activeButton, setActiveButton] = useState<boolean>(false)
-
-    const showCatalog = () => setActiveButton(true)
-
+    try {
+        const res = await axios.get<Catalog[]>(`${api}/catalog`);
+        catalog = res.data;
+    } catch (err) {
+        console.error("Ошибка при загрузке каталога:", err);
+    }
 
     return (
         <div className="flex relative justify-center h-auto">
-            <div
-                className={`grid grid-cols-2 gap-1.5 mt-7 overflow-hidden transition-all duration-500
-            ${activeButton ? 'max-h-300' : 'max-h-57'}`}
-            >
-                {films.map((item, idx) => <Link key={idx} href={item.link}> <Card key={idx} {...item} /></Link>)}
-            </div>
-
-            <Button showCatalog={showCatalog} activeButton={activeButton} />
+            <CatalogWrapper>
+                {catalog.map((item) => (
+                    <Link key={item.id || item.slug} href={`/collection/${item.slug}`}>
+                        <Card {...item} />
+                    </Link>
+                ))}
+            </CatalogWrapper>
         </div>
-    )
-}
+    );
+};
 
-export default page
+export default Page;
